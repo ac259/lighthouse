@@ -1,2 +1,47 @@
+bin/
+lib/
+include/
+etc/
 notebooks/
-.DS_Store
+share/
+.env
+*.DS_Store
+# Trained model files
+models/
+models/*
+
+# Hugging Face model caches
+*.bin
+*.safetensors
+pytorch_model.bin
+
+# Logs and results
+results/
+*.log
+*.out
+*.err
+
+# Python compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+*.venv
+
+# Large dataset files
+data/
+*.csv
+*.json
+*.tsv
+*.txt
+*.xlsx
+*.parquet
+
+# Configuration files
+*.cfg
+*.ini
+config.json
