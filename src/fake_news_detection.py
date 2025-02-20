@@ -24,7 +24,7 @@ load_dotenv()
 
 # Load API keys
 FACT_CHECK_API_KEY = os.getenv("FACT_CHECK_API_KEY")
-MODEL_NAME = "mistral-7b-instruct-v0.1.Q4_0.gguf"
+MODEL_NAME = "Meta-Llama-3-8B-Instruct.Q4_0.gguf"
 
 def is_allowed_to_scrape(url, user_agent='*'):
     """
@@ -62,7 +62,7 @@ def summarize_text(text, max_length=100):
         # Generate the summary
         response = model.generate(prompt, max_tokens=max_length, temp=0.7)
 
-        return response.strip()
+        return response[:max_length]
     except Exception as e:
         print(f"An error occurred during summarization: {e}")
         return None
@@ -132,7 +132,7 @@ def extract_text_from_url(url):
 
     return text
 
-def search_online(query, max_results=5):
+def search_online(query, max_results=3):
     """
     Searches for information online using DuckDuckGo and retrieves content from the top results.
     """
@@ -222,8 +222,12 @@ def analyze_with_llm(llm_pipeline, query, sources):
     """
     Uses a local LLM to analyze aggregated data and make a final judgment.
     """
-    prompt = (
-        f"You are a fake news detection assistant. Your goal is to analyze a claim using multiple sources and determine its credibility.\n\n"
+   # Define system and user prompts
+    system_prompt = (
+        "You are a fake news detection assistant. Your goal is to analyze a claim using multiple sources and determine its credibility."
+    )
+
+    user_prompt = (
         f"Claim: {query}\n\n"
         f"Sources:\n"
         f"- Google Fact Check: {sources['Google Fact Check API']}\n"
@@ -233,9 +237,17 @@ def analyze_with_llm(llm_pipeline, query, sources):
         f"- Source Credibility: {sources['Source Credibility']}\n\n"
         "Based on these sources, analyze whether the claim is true or false. Provide a confidence level and explanation."
     )
+
+    # Combine system and user prompts into the final prompt
+    prompt = (
+        f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
+        f"{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n"
+        f"{user_prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
+    )
+
     
     response = llm_pipeline.generate(prompt, max_tokens=1000)
-    print(f'LLM analysed respnse is : {response}')
+    # print(f'LLM analysed respnse is : {response}')
     return response
 
 # Main function to check fake news
@@ -273,10 +285,8 @@ def main():
     query_1 = 'Does Kurkure chips have plastic in it?'
     query_2 = 'Eating lots of Carrots turn people to Orange?'
     query_3 = 'Did Trump call Zelensky a dictator?'
-    # result = search_online(query_3)
-    # print(result)
     result = check_fake_news(query_3)
-    print(result)
+    print(result["Final Judgment (Local LLM)"])
     
 if __name__ == '__main__':
     main()
