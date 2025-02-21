@@ -1,5 +1,12 @@
-# hate-inc.
-Inspiration from the book by Matt Taibbi. This is my exploration of trying to find balance amongst the polarized news that is fed to us, combating fake news and identifying hate speech
+<h1 align="center">
+    Lighthouse 
+    <img src="https://github.com/user-attachments/assets/7be0a003-2624-424c-8e17-fa5b0745f947" width="150" style="vertical-align: middle;">
+</h1> 
+
+
+Lighthouse is my initiative dedicated to combating fake news, hate speech, and bias in our increasingly complex digital world. In an era where information is abundant yet often misleading, it's essential to understand how content is presented, the motivations behind its dissemination, and our role in sharing it. This project aims to illuminate these aspects, guiding users toward informed and responsible engagement with digital media.
+
+
 
 ## Identifying Fake News, Hate Speech, and Bias on Digital Platforms
 
