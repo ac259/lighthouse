@@ -1,7 +1,7 @@
-from utils import extract_main_content
+from src.spin_doctor.utils import extract_main_content
 from duckduckgo_search import DDGS
 from itertools import islice
-from llm_analysis import summarize_text
+from src.spin_doctor.llm_analysis import summarize_text
 
 def search_online(query, max_results=3):
     """

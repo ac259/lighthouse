@@ -1,6 +1,6 @@
-from fact_check import fetch_fact_check, search_wikipedia, analyze_style, check_source_credibility
-from llm_analysis import load_local_llm, analyze_with_llm
-from search import search_online
+from src.spin_doctor.fact_check import fetch_fact_check, search_wikipedia, analyze_style, check_source_credibility
+from src.spin_doctor.llm_analysis import load_local_llm, analyze_with_llm
+from src.spin_doctor.search import search_online
 
 
 # Main function to check fake news
@@ -32,14 +32,3 @@ def check_fake_news(text):
     result["Final Judgment (Local LLM)"] = analyze_with_llm(llm_pipeline, text, result)
     
     return result
-
-def main():
-    query_1 = 'Does Kurkure chips have plastic in it?'
-    query_2 = 'Eating lots of Carrots turn people to Orange?'
-    query_3 = 'Did Trump call Zelensky a dictator?'
-    query_4 = 'A fargo, north dakota, man was arrested for clearing snow with a flamethrower'
-    result = check_fake_news(query_4)
-    print(result["Final Judgment (Local LLM)"])
-    
-if __name__ == '__main__':
-    main()
