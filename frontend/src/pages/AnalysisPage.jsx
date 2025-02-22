@@ -1,11 +1,10 @@
-// AnalysisPage.jsx
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { analyzeHateSpeech } from '../api';
 
 const AnalysisPage = () => {
   const [text, setText] = useState('');
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -16,12 +15,13 @@ const AnalysisPage = () => {
     }
     setLoading(true);
     setError(null);
-    setResult('');
-
+    setResult(null);
+  
     try {
-      const data = await analyzeHateSpeech(text);
-      if (data) {
-        setResult(data);
+      const response = await analyzeHateSpeech(text);
+      if (response) {
+        // Parse the response string to get an object
+        setResult(parsePlainTextResult(response));
       } else {
         setError('No data returned from server.');
       }
@@ -30,6 +30,30 @@ const AnalysisPage = () => {
     }
     setLoading(false);
   };
+  
+
+  const parsePlainTextResult = (text) => {
+    try {
+      // Try to parse the text as JSON first.
+      const jsonData = JSON.parse(text);
+      return jsonData;
+    } catch (err) {
+      // If parsing as JSON fails, fall back to custom parsing.
+      const lines = text.split('\n');
+      const parsedResult = {};
+      lines.forEach((line) => {
+        if (line.includes('Roberta:')) {
+          parsedResult.Roberta = line.replace('Roberta:', '').trim();
+        } else if (line.includes('HateBERT:')) {
+          parsedResult.HateBERT = line.replace('HateBERT:', '').trim();
+        } else if (line.includes('GPT-4 Analysis:')) {
+          parsedResult['GPT-4 Analysis'] = line.replace('GPT-4 Analysis:', '').trim();
+        }
+      });
+      return parsedResult;
+    }
+  };
+  
 
   return (
     <Layout
@@ -58,9 +82,35 @@ const AnalysisPage = () => {
           <h2 className="text-xl font-semibold text-gray-200 mb-2">Analysis Results:</h2>
           <div className="bg-gray-700 p-4 rounded-lg shadow-inner">
             {loading ? (
-              <div className="text-center text-gray-400">Analysing...</div>
+              <div className="text-center text-gray-400">Analyzing...</div>
             ) : result ? (
-              <p className="whitespace-pre-wrap text-gray-200">{result}</p>
+              <div>
+                {result.Roberta && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-blue-400 mb-1">Roberta:</h3>
+                    {typeof result.Roberta === 'object' ? (
+                      <p className="font-medium">
+                        {result.Roberta.label} (Score: {result.Roberta.score})
+                      </p>
+                    ) : (
+                      <p className="font-medium">{result.Roberta}</p>
+                    )}
+                  </div>
+                )}
+
+                {result.HateBERT && (
+                  <div className="mb-4">
+                    <h3 className="text-lg font-semibold text-blue-400 mb-1">HateBERT:</h3>
+                    <p className="font-medium">{result.HateBERT}</p>
+                  </div>
+                )}
+                {result['GPT-4 Analysis'] && (
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-400 mb-1">GPT-4 Analysis:</h3>
+                    <p className="font-medium">{result['GPT-4 Analysis']}</p>
+                  </div>
+                )}
+              </div>
             ) : (
               <p className="text-gray-400">No analysis performed yet.</p>
             )}
