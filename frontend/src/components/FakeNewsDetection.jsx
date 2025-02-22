@@ -1,11 +1,12 @@
-// FakeNewsDetection.jsx
+// In FakeNewsDetection.jsx
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
 import { analyzeFakeNews } from '../api';
+import FormattedResult from '../components/FormattedResult';
 
 const FakeNewsDetection = () => {
   const [text, setText] = useState('');
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -16,7 +17,7 @@ const FakeNewsDetection = () => {
     }
     setLoading(true);
     setError(null);
-    setResult('');
+    setResult(null);
 
     try {
       const data = await analyzeFakeNews(text);
@@ -58,9 +59,9 @@ const FakeNewsDetection = () => {
           <h2 className="text-xl font-semibold text-gray-200 mb-2">Analysis Results:</h2>
           <div className="bg-gray-700 p-4 rounded-lg shadow-inner">
             {loading ? (
-              <div className="text-center text-gray-400">Analysing...</div>
+              <div className="text-center text-gray-400">Analyzing...</div>
             ) : result ? (
-              <p className="whitespace-pre-wrap text-gray-200">{result}</p>
+              <FormattedResult result={result} />
             ) : (
               <p className="text-gray-400">No analysis performed yet.</p>
             )}

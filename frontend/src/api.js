@@ -30,7 +30,7 @@ export async function analyzeFakeNews(text) {
   console.log("📡 Sending request to Fake News API:", text);  // Debug log
 
   try {
-    const response = await fetch("http://localhost:8000/api/analyze-fake-news", {  // Ensure correct path for fake news
+    const response = await fetch("http://localhost:8000/api/detect-fake-news", {  // Ensure correct path for fake news
       method: "POST",
       headers: {
         "Content-Type": "application/json",
