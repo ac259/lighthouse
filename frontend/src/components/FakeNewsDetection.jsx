@@ -1,9 +1,9 @@
-// AnalysisPage.jsx
+// FakeNewsDetection.jsx
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { analyzeHateSpeech } from '../api';
+import { analyzeFakeNews } from '../api';
 
-const AnalysisPage = () => {
+const FakeNewsDetection = () => {
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +19,7 @@ const AnalysisPage = () => {
     setResult('');
 
     try {
-      const data = await analyzeHateSpeech(text);
+      const data = await analyzeFakeNews(text);
       if (data) {
         setResult(data);
       } else {
@@ -33,8 +33,8 @@ const AnalysisPage = () => {
 
   return (
     <Layout
-      title="Hate Speech Detection"
-      subtitle="Analyze text for hateful language and derogatory expressions"
+      title="Fake News Detection"
+      subtitle="Examine content for misinformation and verify claims"
     >
       <div className="bg-gray-800 p-8 rounded-xl shadow-lg max-w-2xl w-full">
         <textarea
@@ -48,7 +48,7 @@ const AnalysisPage = () => {
         <button
           onClick={handleSubmit}
           className={`mt-4 w-full px-6 py-3 text-lg font-semibold rounded-full shadow-md transition-all duration-300 ${
-            loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-red-600 hover:bg-red-700 text-white'
+            loading ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
           disabled={loading}
         >
@@ -71,4 +71,4 @@ const AnalysisPage = () => {
   );
 };
 
-export default AnalysisPage;
+export default FakeNewsDetection;
