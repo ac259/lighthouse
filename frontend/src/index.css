@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+/* Optional: Add this to test if Tailwind is working */
+body {
+  background-color: #f3f4f6; /* Light gray background */
+}
